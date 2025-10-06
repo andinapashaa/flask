@@ -100,7 +100,8 @@ class NullSession(SecureCookieSession):
     but fail on setting.
     """
 
-    def _fail(self, *args: t.Any, **kwargs: t.Any) -> t.NoReturn:
+    @staticmethod
+    def _fail(*args: t.Any, **kwargs: t.Any) -> t.NoReturn:
         raise RuntimeError(
             "The session is unavailable because no secret "
             "key was set.  Set the secret_key on the "
@@ -182,11 +183,13 @@ class SessionInterface:
         """
         return isinstance(obj, self.null_session_class)
 
-    def get_cookie_name(self, app: Flask) -> str:
+    @staticmethod
+    def get_cookie_name(app: Flask) -> str:
         """The name of the session cookie. Uses``app.config["SESSION_COOKIE_NAME"]``."""
         return app.config["SESSION_COOKIE_NAME"]  # type: ignore[no-any-return]
 
-    def get_cookie_domain(self, app: Flask) -> str | None:
+    @staticmethod
+    def get_cookie_domain(app: Flask) -> str | None:
         """The value of the ``Domain`` parameter on the session cookie. If not set,
         browsers will only send the cookie to the exact domain it was set from.
         Otherwise, they will send it to any subdomain of the given value as well.
@@ -198,7 +201,8 @@ class SessionInterface:
         """
         return app.config["SESSION_COOKIE_DOMAIN"]  # type: ignore[no-any-return]
 
-    def get_cookie_path(self, app: Flask) -> str:
+    @staticmethod
+    def get_cookie_path(app: Flask) -> str:
         """Returns the path for which the cookie should be valid.  The
         default implementation uses the value from the ``SESSION_COOKIE_PATH``
         config var if it's set, and falls back to ``APPLICATION_ROOT`` or
@@ -206,27 +210,31 @@ class SessionInterface:
         """
         return app.config["SESSION_COOKIE_PATH"] or app.config["APPLICATION_ROOT"]  # type: ignore[no-any-return]
 
-    def get_cookie_httponly(self, app: Flask) -> bool:
+    @staticmethod
+    def get_cookie_httponly(app: Flask) -> bool:
         """Returns True if the session cookie should be httponly.  This
         currently just returns the value of the ``SESSION_COOKIE_HTTPONLY``
         config var.
         """
         return app.config["SESSION_COOKIE_HTTPONLY"]  # type: ignore[no-any-return]
 
-    def get_cookie_secure(self, app: Flask) -> bool:
+    @staticmethod
+    def get_cookie_secure(app: Flask) -> bool:
         """Returns True if the cookie should be secure.  This currently
         just returns the value of the ``SESSION_COOKIE_SECURE`` setting.
         """
         return app.config["SESSION_COOKIE_SECURE"]  # type: ignore[no-any-return]
 
-    def get_cookie_samesite(self, app: Flask) -> str | None:
+    @staticmethod
+    def get_cookie_samesite(app: Flask) -> str | None:
         """Return ``'Strict'`` or ``'Lax'`` if the cookie should use the
         ``SameSite`` attribute. This currently just returns the value of
         the :data:`SESSION_COOKIE_SAMESITE` setting.
         """
         return app.config["SESSION_COOKIE_SAMESITE"]  # type: ignore[no-any-return]
 
-    def get_cookie_partitioned(self, app: Flask) -> bool:
+    @staticmethod
+    def get_cookie_partitioned(app: Flask) -> bool:
         """Returns True if the cookie should be partitioned. By default, uses
         the value of :data:`SESSION_COOKIE_PARTITIONED`.
 
@@ -234,7 +242,8 @@ class SessionInterface:
         """
         return app.config["SESSION_COOKIE_PARTITIONED"]  # type: ignore[no-any-return]
 
-    def get_expiration_time(self, app: Flask, session: SessionMixin) -> datetime | None:
+    @staticmethod
+    def get_expiration_time(app: Flask, session: SessionMixin) -> datetime | None:
         """A helper method that returns an expiration date for the session
         or ``None`` if the session is linked to the browser session.  The
         default implementation returns now + the permanent session
@@ -244,7 +253,8 @@ class SessionInterface:
             return datetime.now(timezone.utc) + app.permanent_session_lifetime
         return None
 
-    def should_set_cookie(self, app: Flask, session: SessionMixin) -> bool:
+    @staticmethod
+    def should_set_cookie(app: Flask, session: SessionMixin) -> bool:
         """Used by session backends to determine if a ``Set-Cookie`` header
         should be set for this session cookie for this response. If the session
         has been modified, the cookie is set. If the session is permanent and

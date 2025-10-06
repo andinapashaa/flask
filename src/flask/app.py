@@ -973,8 +973,9 @@ class Flask(App):
 
         return func
 
+    @staticmethod
     def async_to_sync(
-        self, func: t.Callable[..., t.Coroutine[t.Any, t.Any, t.Any]]
+        func: t.Callable[..., t.Coroutine[t.Any, t.Any, t.Any]]
     ) -> t.Callable[..., t.Any]:
         """Return a sync function that will run the coroutine function.
 

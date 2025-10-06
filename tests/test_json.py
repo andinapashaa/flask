@@ -232,7 +232,8 @@ def test_json_customization(app, client):
         return DefaultJSONProvider.default(o)
 
     class CustomProvider(DefaultJSONProvider):
-        def object_hook(self, obj):
+        @staticmethod
+        def object_hook(obj):
             if len(obj) == 1 and "_foo" in obj:
                 return X(obj["_foo"])
 
@@ -339,7 +340,8 @@ def test_json_key_sorting(app, client):
 
 def test_html_method():
     class ObjectWithHTML:
-        def __html__(self):
+        @staticmethod
+        def __html__():
             return "<p>test</p>"
 
     result = json.dumps(ObjectWithHTML())

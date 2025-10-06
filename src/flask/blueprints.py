@@ -52,7 +52,8 @@ class Blueprint(SansioBlueprint):
         # the app's commands to another CLI tool.
         self.cli.name = self.name
 
-    def get_send_file_max_age(self, filename: str | None) -> int | None:
+    @staticmethod
+    def get_send_file_max_age(filename: str | None) -> int | None:
         """Used by :func:`send_file` to determine the ``max_age`` cache
         value for a given file path if it wasn't passed.
 
