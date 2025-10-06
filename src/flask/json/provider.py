@@ -72,8 +72,9 @@ class JSONProvider:
         """
         return self.loads(fp.read(), **kwargs)
 
+    @staticmethod
     def _prepare_response_obj(
-        self, args: tuple[t.Any, ...], kwargs: dict[str, t.Any]
+        args: tuple[t.Any, ...], kwargs: dict[str, t.Any]
     ) -> t.Any:
         if args and kwargs:
             raise TypeError("app.json.response() takes either args or kwargs, not both")

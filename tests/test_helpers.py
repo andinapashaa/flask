@@ -31,7 +31,8 @@ class PyBytesIO:
 
 
 class TestSendfile:
-    def test_send_file(self, app, req_ctx):
+    @staticmethod
+    def test_send_file(app, req_ctx):
         rv = flask.send_file("static/index.html")
         assert rv.direct_passthrough
         assert rv.mimetype == "text/html"
@@ -42,7 +43,8 @@ class TestSendfile:
 
         rv.close()
 
-    def test_static_file(self, app, req_ctx):
+    @staticmethod
+    def test_static_file(app, req_ctx):
         # Default max_age is None.
 
         # Test with static file handler.
@@ -89,7 +91,8 @@ class TestSendfile:
             assert rv.cache_control.max_age == 10
             rv.close()
 
-    def test_send_from_directory(self, app, req_ctx):
+    @staticmethod
+    def test_send_from_directory(app, req_ctx):
         app.root_path = os.path.join(
             os.path.dirname(__file__), "test_apps", "subdomaintestmodule"
         )
@@ -100,14 +103,16 @@ class TestSendfile:
 
 
 class TestUrlFor:
-    def test_url_for_with_anchor(self, app, req_ctx):
+    @staticmethod
+    def test_url_for_with_anchor(app, req_ctx):
         @app.route("/")
         def index():
             return "42"
 
         assert flask.url_for("index", _anchor="x y") == "/#x%20y"
 
-    def test_url_for_with_scheme(self, app, req_ctx):
+    @staticmethod
+    def test_url_for_with_scheme(app, req_ctx):
         @app.route("/")
         def index():
             return "42"
@@ -117,7 +122,8 @@ class TestUrlFor:
             == "https://localhost/"
         )
 
-    def test_url_for_with_scheme_not_external(self, app, req_ctx):
+    @staticmethod
+    def test_url_for_with_scheme_not_external(app, req_ctx):
         app.add_url_rule("/", endpoint="index")
 
         # Implicit external with scheme.
@@ -128,7 +134,8 @@ class TestUrlFor:
         with pytest.raises(ValueError):
             flask.url_for("index", _scheme="https", _external=False)
 
-    def test_url_for_with_alternating_schemes(self, app, req_ctx):
+    @staticmethod
+    def test_url_for_with_alternating_schemes(app, req_ctx):
         @app.route("/")
         def index():
             return "42"
@@ -140,16 +147,19 @@ class TestUrlFor:
         )
         assert flask.url_for("index", _external=True) == "http://localhost/"
 
-    def test_url_with_method(self, app, req_ctx):
+    @staticmethod
+    def test_url_with_method(app, req_ctx):
         from flask.views import MethodView
 
         class MyView(MethodView):
-            def get(self, id=None):
+            @staticmethod
+            def get(id=None):
                 if id is None:
                     return "List"
                 return f"Get {id:d}"
 
-            def post(self):
+            @staticmethod
+            def post():
                 return "Create"
 
         myview = MyView.as_view("myview")
@@ -161,7 +171,8 @@ class TestUrlFor:
         assert flask.url_for("myview", id=42, _method="GET") == "/myview/42"
         assert flask.url_for("myview", _method="POST") == "/myview/create"
 
-    def test_url_for_with_self(self, app, req_ctx):
+    @staticmethod
+    def test_url_for_with_self(app, req_ctx):
         @app.route("/<self>")
         def index(self):
             return "42"
@@ -225,7 +236,8 @@ class TestNoImports:
     imp modules in the Python standard library.
     """
 
-    def test_name_with_import_error(self, modules_tmp_path):
+    @staticmethod
+    def test_name_with_import_error(modules_tmp_path):
         (modules_tmp_path / "importerror.py").write_text("raise NotImplementedError()")
         try:
             flask.Flask("importerror")
@@ -234,7 +246,8 @@ class TestNoImports:
 
 
 class TestStreaming:
-    def test_streaming_with_context(self, app, client):
+    @staticmethod
+    def test_streaming_with_context(app, client):
         @app.route("/")
         def index():
             def generate():
@@ -247,7 +260,8 @@ class TestStreaming:
         rv = client.get("/?name=World")
         assert rv.data == b"Hello World!"
 
-    def test_streaming_with_context_as_decorator(self, app, client):
+    @staticmethod
+    def test_streaming_with_context_as_decorator(app, client):
         @app.route("/")
         def index():
             @flask.stream_with_context
@@ -271,7 +285,8 @@ class TestStreaming:
             def __iter__(self):
                 return self
 
-            def close(self):
+            @staticmethod
+            def close():
                 called.append(42)
 
             def __next__(self):
@@ -292,7 +307,8 @@ class TestStreaming:
         assert rv.data == b"Hello World!"
         assert called == [42]
 
-    def test_stream_keeps_session(self, app, client):
+    @staticmethod
+    def test_stream_keeps_session(app, client):
         @app.route("/")
         def index():
             flask.session["test"] = "flask"
@@ -306,7 +322,8 @@ class TestStreaming:
         rv = client.get("/")
         assert rv.data == b"flask"
 
-    def test_async_view(self, app, client):
+    @staticmethod
+    def test_async_view(app, client):
         @app.route("/")
         async def index():
             flask.session["test"] = "flask"
@@ -345,7 +362,8 @@ class TestHelpers:
         monkeypatch.setenv("FLASK_DEBUG", debug)
         assert get_debug_flag() == expect
 
-    def test_make_response(self):
+    @staticmethod
+    def test_make_response():
         app = flask.Flask(__name__)
         with app.test_request_context():
             rv = flask.helpers.make_response()

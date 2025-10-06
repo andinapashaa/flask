@@ -460,7 +460,8 @@ class TestRoutes:
         cli = FlaskGroup(create_app=lambda: app)
         return partial(runner.invoke, cli)
 
-    def expect_order(self, order, output):
+    @staticmethod
+    def expect_order(order, output):
         # skip the header and match the start of each row
         for expect, line in zip(order, output.splitlines()[2:], strict=False):
             # do this instead of startswith for nicer pytest output
@@ -486,20 +487,23 @@ class TestRoutes:
         match_order = [r.endpoint for r in app.url_map.iter_rules()]
         self.expect_order(match_order, invoke(["routes", "-s", "match"]).output)
 
-    def test_all_methods(self, invoke):
+    @staticmethod
+    def test_all_methods(invoke):
         output = invoke(["routes"]).output
         assert "GET, HEAD, OPTIONS, POST" not in output
         output = invoke(["routes", "--all-methods"]).output
         assert "GET, HEAD, OPTIONS, POST" in output
 
-    def test_no_routes(self, runner):
+    @staticmethod
+    def test_no_routes(runner):
         app = Flask(__name__, static_folder=None)
         cli = FlaskGroup(create_app=lambda: app)
         result = runner.invoke(cli, ["routes"])
         assert result.exit_code == 0
         assert "No routes were registered." in result.output
 
-    def test_subdomain(self, runner):
+    @staticmethod
+    def test_subdomain(runner):
         app = Flask(__name__, static_folder=None)
         app.add_url_rule("/a", subdomain="a", endpoint="a")
         app.add_url_rule("/b", subdomain="b", endpoint="b")
@@ -508,7 +512,8 @@ class TestRoutes:
         assert result.exit_code == 0
         assert "Subdomain" in result.output
 
-    def test_host(self, runner):
+    @staticmethod
+    def test_host(runner):
         app = Flask(__name__, static_folder=None, host_matching=True)
         app.add_url_rule("/a", host="a", endpoint="a")
         app.add_url_rule("/b", host="b", endpoint="b")

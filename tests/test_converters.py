@@ -7,7 +7,8 @@ from flask import url_for
 
 def test_custom_converters(app, client):
     class ListConverter(BaseConverter):
-        def to_python(self, value):
+        @staticmethod
+        def to_python(value):
             return value.split(",")
 
         def to_url(self, value):
@@ -28,7 +29,8 @@ def test_custom_converters(app, client):
 
 def test_context_available(app, client):
     class ContextConverter(BaseConverter):
-        def to_python(self, value):
+        @staticmethod
+        def to_python(value):
             assert request is not None
             assert session is not None
             return value

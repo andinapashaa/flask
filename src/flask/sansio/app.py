@@ -530,7 +530,8 @@ class App(Scaffold):
         """
         return DispatchingJinjaLoader(self)
 
-    def select_jinja_autoescape(self, filename: str) -> bool:
+    @staticmethod
+    def select_jinja_autoescape(filename: str) -> bool:
         """Returns ``True`` if autoescaping should be active for the given
         template name. If no template name is given, returns `True`.
 
@@ -922,7 +923,8 @@ class App(Scaffold):
 
         return False
 
-    def should_ignore_error(self, error: BaseException | None) -> bool:
+    @staticmethod
+    def should_ignore_error(error: BaseException | None) -> bool:
         """This is called to figure out if an error should be ignored
         or not as far as the teardown system is concerned.  If this
         function returns ``True`` then the teardown handlers will not be
