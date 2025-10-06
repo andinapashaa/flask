@@ -108,7 +108,6 @@ class NullSession(SecureCookieSession):
         )
 
     __setitem__ = __delitem__ = clear = pop = popitem = update = setdefault = _fail  # noqa: B950
-    del _fail
 
 
 class SessionInterface:

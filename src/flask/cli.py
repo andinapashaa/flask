@@ -112,9 +112,7 @@ def _called_with_wrong_args(f: t.Callable[..., Flask]) -> bool:
         # Didn't reach the function.
         return True
     finally:
-        # Delete tb to break a circular reference.
-        # https://docs.python.org/2/library/sys.html#sys.exc_info
-        del tb
+        pass
 
 
 def find_app_by_string(module: ModuleType, app_name: str) -> Flask:

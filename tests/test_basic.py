@@ -1938,7 +1938,6 @@ def test_app_freed_on_zero_refcount():
         assert app.view_functions["static"]
         weak = weakref.ref(app)
         assert weak() is not None
-        del app
         assert weak() is None
     finally:
         gc.enable()
