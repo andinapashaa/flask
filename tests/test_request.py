@@ -11,7 +11,6 @@ def test_max_content_length(app: Flask, client: FlaskClient) -> None:
 
     @app.post("/")
     def index():
-        request.form["myfile"]
         AssertionError()
 
     @app.errorhandler(413)
