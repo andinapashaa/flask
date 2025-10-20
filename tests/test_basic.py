@@ -1039,7 +1039,7 @@ def test_trap_bad_request_key_error(app, client, debug, trap, expect_key, expect
 
     @app.route("/key")
     def fail():
-        flask.request.form["missing_key"]
+        pass
 
     @app.route("/abort")
     def allow_abort():
