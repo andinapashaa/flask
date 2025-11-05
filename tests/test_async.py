@@ -28,11 +28,13 @@ class AsyncView(View):
 
 
 class AsyncMethodView(MethodView):
-    async def get(self):
+    @staticmethod
+    async def get():
         await asyncio.sleep(0)
         return "GET"
 
-    async def post(self):
+    @staticmethod
+    async def post():
         await asyncio.sleep(0)
         return "POST"
 
